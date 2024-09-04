@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>B.S. in Computer Science | UMSL</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+<body>
+    <img src="{{ url_for('static', filename='umsl.jpg') }}">
+    <h1 style="color: firebrick; font-family: Compacta typeface, sans-serif;">STUDENT INFORMATION</h1>
+    <form action="/course_map" method="POST">
+        <pre><p>STUDENT NAME      <input type="text" name="Student_name"></p></pre>
+        <pre><p>WAIVED COURSE     <input type="text" id="Waived_course" name="Waived_course"></p></pre>
+        <select id="waived_dropdown">
+            {% for item in items %}
+                <option value="{{ item }}">{{ item }}</option>
+            {% endfor %}
+        </select>
+        <div id="waived_course_container">
+            <button type="button" onclick="addCourse('waived_course_container', 'waived_dropdown', 'Waived_course')">ADD COURSE TO WAIVED LIST</button>
+        </div>
+        <pre><p>COMPLETED COURSE  <input type="text" id="Completed_course" name="Completed_course"></p></pre>
+        <select id="completed_dropdown">
+            {% for item in items %}
+                <option value="{{ item }}">{{ item }}</option>
+            {% endfor %}
+        </select>
+        <div id="completed_course_container">
+            <button type="button" onclick="addCourse('completed_course_container', 'completed_dropdown', 'Completed_course')">ADD COURSE TO COMPLETED LIST</button>
+        </div>
+        <!-- <pre><p>Semesters         <input type="text" name="Semesters"></p></pre> -->
+        <pre><p>SEMESTERS         <select name="Semesters">
+            {% for i in range(1, 21) %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select></p></pre>
+        <div class="radio-container">
+            <label style="margin-right: 64px; font-size: small;">SUMMER</label>
+            <input type="radio" name="Summer" id="summer_yes" value="Yes"> <label for="summer_yes">YES</label>
+            <input type="radio" name="Summer" id="summer_no" value="No"> <label for="summer_no">NO</label>
+        </div>
+        <pre><p>STARTING SEASON   <select id="starting_season_dropdown" name="Starting_season">
+            {% for season in starting_season %}
+                <option value="{{ season }}">{{ season }}</option>
+            {% endfor %}
+        </select></p></pre>
+        <!-- <pre><p>credits_persem    <input type="text" name="credits_persem"></p></pre> -->
+        <pre><p>CREDITS_PERSEM    <select name="credits_persem">
+            {% for i in range(1, 21) %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select></p></pre>
+        <p><input type="submit" value="Submit"></p>
+    </form>
+
+    <script>
+    function addCourse(containerId, dropdownId, courseName) {
+        var container = document.getElementById(containerId);
+        var dropdown = document.getElementById(dropdownId);
+        var selectedOption = dropdown.options[dropdown.selectedIndex].value;
+
+        var input = document.getElementById(courseName);
+        if (!input) {
+            input = document.createElement("input");
+            input.type = "text";
+            input.id = courseName;
+            input.name = courseName;
+            container.appendChild(input); 
+        }
+
+        if (!input.value) {
+            input.value = selectedOption;
+        } else {
+            input.value += ", " + selectedOption;
+        }
+    }
+    </script>
+</body>
+</html>

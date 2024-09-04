@@ -1,0 +1,44 @@
+function createDropdown1(available,calendar,seme) {
+    // Increment dropdown count for unique ids
+    dropdownCount++;
+
+    // Create a container div for the dropdown and delete button
+    var container = document.createElement("div");
+
+    // Create a select element (dropdown)
+    var dropdown = document.createElement("select");
+    dropdown.id = seme+"_dropdown_" + dropdownCount;
+    // Create options for the dropdown
+    var hours=[]
+    for course in available:
+      if seme['season'] in course['season_available'].keys:
+        hours.push(course['course_name']+"credits: "+course['credits'])
+    var options = hours;
+
+    // Loop through options and create option elements
+    options.forEach(function(optionText) {
+      var option = document.createElement("option");
+      option.text = optionText;
+      dropdown.add(option);
+    });
+
+    // Create a delete button
+    var deleteButton = document.createElement("button");
+    deleteButton.textContent = "-";
+    deleteButton.onclick = function() {
+      container.parentNode.removeChild(container);
+    };
+
+    // Append the dropdown and delete button to the container
+    container.appendChild(dropdown);
+    container.appendChild(deleteButton);
+
+    // Get the container div where dropdowns will be added
+    var dropdownContainer = document.getElementById(seme);
+
+    // Append the container to the dropdown container div
+    dropdownContainer.appendChild(container);
+
+    // Add a line break
+    //dropdownContainer.appendChild(document.createElement("br"));
+  }

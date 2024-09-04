@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repeated Dropdown List Generator</title>
+  <script>
+    var dropdownCount = 0;
+
+    function createDropdown(argu) {
+      // Increment dropdown count for unique ids
+      dropdownCount++;
+
+      // Create a container div for the dropdown and delete button
+      var container = document.createElement("div");
+
+      // Create a select element (dropdown)
+      var dropdown = document.createElement("select");
+      dropdown.id = "dropdown_" + dropdownCount;
+
+      // Create options for the dropdown
+      var options = ["Option 1", "Option 2", "Option 3"];
+
+      // Loop through options and create option elements
+      options.forEach(function(optionText) {
+        var option = document.createElement("option");
+        option.text = optionText;
+        dropdown.add(option);
+      });
+
+      // Create a delete button
+      var deleteButton = document.createElement("button");
+      deleteButton.textContent = "Delete Dropdown";
+      deleteButton.onclick = function() {
+        container.parentNode.removeChild(container);
+      };
+
+      // Append the dropdown and delete button to the container
+      container.appendChild(dropdown);
+      container.appendChild(deleteButton);
+
+      // Get the container div where dropdowns will be added
+      var dropdownContainer = document.getElementById(argu);
+
+      // Append the container to the dropdown container div
+      dropdownContainer.appendChild(container);
+
+      // Add a line break
+      dropdownContainer.appendChild(document.createElement("br"));
+    }
+  </script>
+</head>
+<body>
+  <h2>Repeated Dropdown List Generator</h2>
+  <div id="dropdownContainer1"></div>
+  <button onclick="createDropdown('dropdownContainer1')">Create Dropdown List 1</button>
+  <br><br>
+  <div id="dropdownContainer2"></div>
+  <button onclick="createDropdown('dropdownContainer2')">Create Dropdown List 2</button>
+  <br><br>
+  <div id="dropdownContainer3"></div>
+  <button onclick="createDropdown('dropdownContainer3')">Create Dropdown List 3</button>
+</body>
+</html>

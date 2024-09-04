@@ -1,0 +1,29 @@
+<!--html testing2-->
+<!DOCTYPE html>
+<html lang="en">
+<body>
+
+  <h1>Identical Buttons Generator</h1>
+
+  <button onclick="createIdenticalButton()">Generate Identical Button</button>
+
+  <div id="container"><p></p></div>
+
+  <script>
+    function createIdenticalButton() {
+        var array = ['dip','dop','dew']
+      // Create a new button element
+      var newButton = document.createElement("button");
+      //var newList = doccument.createElement("select")
+      newButton.textContent = "+";
+      //newList.id="array";
+
+      // Add the new button to the container
+      document.getElementById("container").appendChild(newButton);
+      //document.getElementById("container").appendChild(newList);
+
+    }
+  </script>
+
+</body>
+</html>

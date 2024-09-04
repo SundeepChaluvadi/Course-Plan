@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <title>Calendar for {{ html_data }}</title>
+      </head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two Column List with Rounded Boxes and Headers</title>
+<style>
+  /* CSS for two-column layout */
+  .list-container {
+    width: calc(30% - 20px); /* Adjust this value to control the width of each column */
+    width: 2000px;
+    float: left;
+    box-sizing: border-box;
+    padding: 10px;
+    margin: 10px;
+  }
+  
+  .rounded-box {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+  }
+  
+  /* Clearfix to contain floats */
+  .clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+  .container {
+      width: 100px; /* Set your desired width here */
+    }
+</style>
+</head>
+<body>
+
+<div class="clearfix">
+  <h1>Hello {{ student_name }}!</h1>
+  <h4>Make modifications to the calendar below. </h4>
+  <h4>Once completed, click "Check Values" to verify course map validity. </h4>
+  <li>Student Name: {{ student_name }}</li>
+  <li>Waived courses: {{ waived_courses }}</li>
+  <li>Completed Courses: {{ completed_courses }}</li>
+  <!--<li>Semesters: {{ semesters }}</li>
+  <li>Summer? {{ summer }}</li>
+  <li>Starting Season: {{ starting_season }}</li>
+  <li>Core credits: {{ calendardeets["core_credits"] }}</li>
+  <li>Elective Credits: {{ calendardeets["elective_credits"] }}</li>
+  <li>Geneneral Education Credits Required: {{ calendardeets["gen_ed_credits"] }}</li>
+  <li>Total Credits: {{ calendardeets["total_hours"] }}</li>
+   -->
+  <li>Availability codes:</li>
+  <li>"D"=Daytime,"E"=Evening,"O"=Online,"A"=Internship,"-"=Other,"H"=Half-Online</li>
+  
+ 
+  <button onclick="sendValues({{calendar}},{{available}},{{waived}},{{completed}})">Check Values</button>
+  <p id="line" style="color:red;"></p>
+
+
+{% for semester in calendar %}
+  <!-- First column -->
+  <div class="list-container">
+    <div class="rounded-box">
+      <h2>{{ calendar[semester]['name']+", "+calendar[semester]['season'] }}
+        {{ (calendar[semester]['year']) }}</h2>
+      <h3>Total Hours: {{ calendar[semester]['hours'] }}</h3>
+      <ul style=" float:left; list-style-type:none;">
+        <div style="width:200px;">
+        <h4 style="display:inline-block;">Courses</h4>
+        {% for item in calendar[semester]['courses'] %}
+        <li>{{ calendar[semester]['courses'][item]['course_name'] }}</li>
+        {% endfor %}
+        </div>
+        <div id={{semester}}></div>
+        <button onclick="createDropdown({{available}},{{calendar}},'{{semester}}')">Add Course</button>
+
+        <!--<button onclick="createDropdown({{available}},{{calendar}},'{{semester}}')">Add Course</button>-->
+      </ul>
+      <ul style=" float:left; list-style-type:none;">
+        <div style="width:100px;">
+        <h4 style="display:inline-block;">Credits</h4>
+        {% for item in calendar[semester]['courses'] %}
+        <li>{{ calendar[semester]['courses'][item]['credits'] }}
+        </li>
+        {% endfor %}
+        </div>
+      </ul>
+      <ul style=" float:left; list-style-type:none;">
+        <h4>Availability</h4>
+        {% for item in calendar[semester]['courses'] %}
+        <li>{{ calendar[semester]['courses'][item]['season_available'][calendar[semester]['season']] }}
+        </li>
+        {% endfor %}
+      </ul>
+      <ul style=" float:left; list-style-type:none;">
+        <h4>Seasons</h4>
+        {% for item in calendar[semester]['courses'] %}
+        {%set seasons = calendar[semester]['courses'][item]['season_available'].keys() | list%}
+        <li>{{ seasons }}
+        </li>
+        {% endfor %}
+      </ul>
+      <ul style=" float:left; list-style-type:none;">
+        <h4>Prereqs</h4>
+        {% for item in calendar[semester]['courses'] %}
+          {% if not calendar[semester]['courses'][item]['prereqs'] %}
+            <li>None</li>
+          {% else %}
+            <li>{{ calendar[semester]['courses'][item]['prereqs'] }}</li>
+          {%endif%}
+        {% endfor %}
+      </ul>
+      <ul style=" float:left; list-style-type:none;">
+        <h4>Course Type</h4>
+        {% for item in calendar[semester]['courses'] %}
+        <li>{{ calendar[semester]['courses'][item]['type'] }}
+        </li>
+        {% endfor %}
+      </ul>
+      <ul style=" float:left; list-style-type:none; ">
+        <h4>Move/Remove?</h4>
+        {% for item in calendar[semester]['courses'] %}
+        <li>
+            <select id="{{semester}}.{{item}}" name="Move">
+            <option value="-">-</option>
+            {% if calendar[semester]['courses'][item]['type'] == "Core_Prereq" or calendar[semester]['courses'][item]['type']=="Core_Course" %}
+              
+            {% else %}
+              <option value="Move Remove">Remove {{ calendar[semester]['courses'][item]['course_name'] }}</option>
+            {%endif%}
+            <option value="Move Waived">Move {{ calendar[semester]['courses'][item]['course_name'] }} to Waived (No credits)</option>
+            <option value="Move Completed">Move {{ calendar[semester]['courses'][item]['course_name'] }}  to Completed</option>
+            {% for sem in calendar %}
+            <!-- if statements here -->
+            <!-- If the course is core, do not include "remove" option. If course is not in season, do not include semester option.-->
+            <!--Assume students know they want to go above or below hourspersem, assume students understand course prereqs. -->
+              {% if calendar[sem]['season'] in calendar[semester]['courses'][item]['season_available'].keys()  %}
+                <option value="{{ calendar[sem]['name'] }}">Move {{ calendar[semester]['courses'][item]['course_name'] }} to {{ calendar[sem]['name']  }} ({{calendar[sem]['season']}})</option>
+              {% endif %}
+            {% endfor %}
+        </select>
+        </li>
+        
+        {% endfor %}
+
+      </ul>
+
+
+    </div>
+
+  </div>
+  
+{% endfor %}
+
+
+
+
+
+<div id="container"><p></p></div>
+
+
+<script>
+    //var completed={};
+    //var waived={};
+    var dropdownCount = 0;
+    var error_log=[];
+    var calendar_courses=[];
+
+    function createDropdown(available,calendar,seme) {
+      // Increment dropdown count for unique ids
+      dropdownCount++;
+      //console.log(dropdownCount)
+      // Create a container div for the dropdown and delete button
+      var container = document.createElement("div");
+
+      // Create a select element (dropdown)
+      var dropdown = document.createElement("select");
+      dropdown.id = seme+"_dropdown_" + dropdownCount;
+      // Create options for the dropdown
+      var hours=[]
+      //console.log(JSON.stringify(available))
+      for (var course in available){
+        var season
+        var available_season=JSON.stringify(Object.keys(available[course]['season_available']));
+        for (var i in available[course]['sem_availability']){
+          if(JSON.stringify(calendar[seme]['season'])==JSON.stringify(available[course]['sem_availability'][i])){
+            season=available[course]['sem_availability'][i];
+          }
+          
+        }
+          if (available[course]['prereqs'].length>0){
+            prereq=available[course]['prereqs']
+            
+          }
+          else{
+            //console.log("success");
+            prereq="None"
+            
+          }
+        if(calendar[seme]['season'] in available[course]['season_available']){
+          hours.push(available[course]['course_name']+", "+available[course]['credits']+", "+available[course]['season_available'][season]+", ["+available[course]['sem_availability']+"], ["+prereq+"], "+available[course]['type'])
+        }
+      }
+      //console.log(JSON.stringify(hours))
+      var options = hours;
+
+      // Loop through options and create option elements
+      options.forEach(function(optionText) {
+        var option = document.createElement("option");
+        option.text = optionText;
+        dropdown.add(option);
+      });
+
+      // Create a delete button
+      var deleteButton = document.createElement("button");
+      deleteButton.textContent = "-";
+      deleteButton.onclick = function() {
+        container.parentNode.removeChild(container);
+      };
+
+      // Append the dropdown and delete button to the container
+      container.appendChild(dropdown);
+      container.appendChild(deleteButton);
+
+      // Get the container div where dropdowns will be added
+      var dropdownContainer = document.getElementById(seme);
+
+      // Append the container to the dropdown container div
+      dropdownContainer.appendChild(container);
+
+      // Add a line break
+      //dropdownContainer.appendChild(document.createElement("br"));
+    }
+
+    function sendValues(calendar,available,waived,completed) {
+        var dropdowns = document.getElementsByTagName("select");
+        var data = {};
+        calendar_courses=[];
+        var elective_hours=0
+        var gen_ed_hours=0
+        var total_hours_new=0
+         error_log=[];
+
+        for (const [key, value] of Object.entries(waived)){
+                //calendar_courses.push(waived[key]['course_name'])
+                //console.log("Calendar Error1",calendar_courses)
+              }
+        for (const [key, value] of Object.entries(completed)){
+          //calendar_courses.push(completed[key]['course_name'])
+          //console.log("Calendar Error2",calendar_courses)
+          //console.log("Gened type",completed[key]['type'])
+          if (completed[key]['type']=="Gen.Ed"){
+            //console.log("Gened Credits",completed[key]['credits'])
+            //gen_ed_hours=gen_ed_hours+completed[key]['credits']
+          }
+          if (completed[key]['type']=="Elective"){
+            elective_hours=elective_hours+completed[key]['credits']
+          }
+          //total_hours_new=total_hours_new+completed[key]['credits']
+        }
+        // Iterate through each select element
+        for (var i = 0; i < dropdowns.length; i++) {
+            var dropdown = dropdowns[i];
+            // Get the id and selected value of each dropdown
+            var id = dropdown.id;
+            var value = dropdown.value;
+            // Assign the value to the corresponding id key in the data object
+            data[id] = value;
+        }
+        const copy = {};
+        Object.assign(copy, calendar);
+        for (const [key, value] of Object.entries(data)) {
+          if(value!='-'){
+            if(key.includes("dropdown")){
+              //Parse class dept number
+              var class_deptnumber=value.substring(0,value.indexOf(','));
+              //Parse semester
+              var semester1=key.split('_') + '';
+              var semester=semester1.substring(9,semester1.indexOf(',d'))
+              var course_name
+              //console.log("semester",semester)
+              for (const course in available){
+                course_name=available[course]['course_name']
+                //console.log("available course",course_name);
+                //console.log("class deptnumber",class_deptnumber)
+                //console.log("key",)
+                //console.log("equal?",course_name==class_deptnumber);
+                //console.log("types", typeof course_name,typeof class_deptnumber)
+                if (course_name==class_deptnumber){
+                  //console.log("SUCCESS!")
+                  var entry=available[course]
+                }
+                //console.log("New course",entry)
+              }
+              //console.log("Check copy",Object.keys(copy['semester_'+semester]['courses']).length)
+              //console.log("Check copy",copy['semester_'+semester]['courses'])
+              copy['semester_'+semester]['courses']['course_'+Object.keys(copy['semester_'+semester]['courses']).length]=entry
+                //'course_name':class_deptnumber,
+              //'credits':
+              //console.log("updated calendar",copy)
+
+              
+
+            }
+            //Check for Moved
+            if(key.includes("course")){
+              //var new_sem=value.indexOf()
+              var semester1=value.split(" ");
+              var action=semester1[0]
+              var semester=semester1[1]
+              var origin1=key.split(".");
+              var origin=origin1[0];
+              var movecourse=origin1[1];
+              if (semester=="Waived"){
+                //console.log(origin,copy[origin]['courses'][movecourse])
+                var entry=copy[origin]['courses'][movecourse]
+                waived['course_'+Object.keys(waived).length]=entry
+                delete copy[origin]['courses'][movecourse]
+
+              }
+              else if (semester=="Completed"){
+                //console.log(origin,copy[origin]['courses'][movecourse])
+                var entry=copy[origin]['courses'][movecourse]
+                completed['course_'+Object.keys(completed).length]=entry
+                delete copy[origin]['courses'][movecourse]
+              }
+              else if (semester == "Remove"){
+                delete copy[origin]['courses'][movecourse]
+              }
+              else{
+                var counter=0
+                while (copy['semester_'+semester]['courses']['course_'+counter]){
+                  counter=counter+1
+                }
+                var entry=copy[origin]['courses'][movecourse]
+                copy['semester_'+semester]['courses']['course_'+counter]=entry
+                delete copy[origin]['courses'][movecourse]
+                }
+              //console.log(origin,movecourse,action,semester)
+              //console.log("updated calendar",calendar)
+              //console.log('waived',waived)
+              //console.log('completed',completed)
+
+            }
+          }
+
+        }
+
+          //console.log("COMPLETED",completed)
+          //console.log("Hours1 ",gen_ed_hours,elective_hours,total_hours_new)
+          //For every course in waived, push to calendar_courses
+          for (const [key, value] of Object.entries(waived)){
+                calendar_courses.push(waived[key]['course_name'])
+                
+                //console.log("Calendar Error1",calendar_courses)
+              }
+          //console.log(waived)
+          //For every course in completed, push to calendar courses. 
+          for (const [key, value] of Object.entries(completed)){
+            calendar_courses.push(completed[key]['course_name'])
+            //console.log("Gened type",completed[key]['type'])
+            //If Gen.ed, add to gen.ed
+            if (completed[key]['type']=="Gen.Ed"){
+              //console.log("Gened Credits",completed[key]['credits'])
+              gen_ed_hours=gen_ed_hours+completed[key]['credits']
+            }
+            //If elective, add to elective
+            if (completed[key]['type']=="Elective"){
+              elective_hours=elective_hours+completed[key]['credits']
+            }
+            //Add to total hours. 
+            total_hours_new=total_hours_new+completed[key]['credits']
+          }
+          //console.log(completed)
+          
+          //For every semester in calendar
+          for (const [key, value] of Object.entries(copy)){
+            //For every course in semester
+            for (const [s,c] of Object.entries(copy[key]['courses'])){
+                //For every prerequisite in course
+                for (i in copy[key]['courses'][s]['prereqs']){
+                      //If the course is not found in calendar_courses, print an error. 
+                      if(calendar_courses.includes(copy[key]['courses'][s]['prereqs'][i])==false){
+                        error_log.push("\nWarning: Prerequisite "+copy[key]['courses'][s]['prereqs'][i]+" is either missing or out of place for "+copy[key]['courses'][s]['course_name'])
+                      }
+                }
+                //If course is Gen.Ed, add to Gen.Ed
+                if (copy[key]['courses'][s]['type']=="Gen.Ed"){
+                  //console.log("Gened Calendar Credits",copy[key]['courses'][s]['credits'])
+                  gen_ed_hours=gen_ed_hours+copy[key]['courses'][s]['credits']
+                }
+                //If course is elective, add to elective
+                if (copy[key]['courses'][s]['type']=="Elective"){
+                  elective_hours=elective_hours+copy[key]['courses'][s]['credits']
+                }
+                //Add to total hours.
+                total_hours_new=total_hours_new+copy[key]['courses'][s]['credits']
+
+                //console.log(copy[key]['courses'][s]['course_name'])
+                //Add course to calendar. 
+                calendar_courses.push(copy[key]['courses'][s]['course_name'])
+              }
+            }
+
+        const uniqueElements = new Set();
+        const duplicates=[];
+        calendar_courses.forEach(item=>{
+          if (uniqueElements.has(item)){
+            duplicates.push(item);
+          }
+          else{
+            uniqueElements.add(item);
+          }
+        })
+        //console.log("Calendar Error2",calendar_courses)
+        for (i in duplicates){
+          error_log.push("\nWarning: Duplicate entries detected for "+duplicates[i]+". Please remove repeat entries")}
+
+        if(gen_ed_hours<27){
+          error_log.push("\nWarning: Insufficient Gen Ed. Required: 27 credits. Current:"+gen_ed_hours)
+        }
+        if(elective_hours<15){
+          error_log.push("\nWarning: Insufficient Electives. Electives must be COMP SCI 3000 level or greater. Required: 15 credits. Current:"+elective_hours)
+        }
+        if(total_hours_new<120){
+          error_log.push("\nWarning: Insufficient hours. Required: 120. Current:"+total_hours_new)
+        }
+        // console.log("Hours1 ",gen_ed_hours,elective_hours,total_hours_new)
+        // console.log('course list:',calendar_courses)
+        // console.log('course list length',calendar_courses.length)
+        // console.log('errors:',error_log)
+        
+        // console.log(error_log=="")
+        // console.log("copy",copy)
+ 
+        // Check if the button exists before trying to remove it
+
+        if(error_log==''){
+
+          error_log="No issues detected. Course Map Valid."
+          
+
+
+        }
+        modifyLine(error_log,gen_ed_hours,elective_hours,total_hours_new);
+    }
+    function modifyLine(error_log,gen_ed_hours,elective_hours,total_hours_new) {
+      var line = document.getElementById('line');
+      line.innerText = "GenEd Hours: "+gen_ed_hours+"\nElective Hours: "+elective_hours+"\nTotal Hours: "+total_hours_new+"\n"+error_log;
+    }
+
+
+  </script>
+</body>
+</html>

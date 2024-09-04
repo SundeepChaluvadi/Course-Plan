@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WELCOME TO UMSL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: justify;
+            /* Align text */
+            padding-left: 40px;
+            /* Adjust the left padding */
+            padding-right: 40px;
+            /* Adjust the right padding */
+            line-height: 1.3;
+            /* Adjust the line height */
+        }
+        
+        h1,
+        p {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        h1 {
+            color: red;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+        }
+        
+        .button {
+            background-color: skyblue;
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            align-items: center;
+            margin-left: auto;
+        }
+        
+        .button:hover {
+            background-color: #0056b3;
+        }
+        
+        ul {
+            margin-top: 10px;
+            /* Adjust the top margin of the unordered list */
+            margin-bottom: 10px;
+            /* Adjust the bottom margin of the unordered list */
+        }
+        
+        li {
+            margin-bottom: 5px;
+            /* Adjust the bottom margin of each list item */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Welcome to UMSL</h1>
+        <img src="https://www.umsl.edu/branding/logos/images/vertical-triton-red-blk.png" alt="" style="max-width: 30%; border-radius: 8px;">
+        <h2>BS in Computer Science</h2>
+        <p>The Bachelor's in Computer Science program is designed for those interested in software and computer systems. It provides a solid foundation in computing and mathematics, along with specializations offered through elective courses and available
+            certificates. Graduating seniors find fulfilling careers in many related areas such as cybersecurity, networks, Internet programming, software and mobile apps development, data science, AI, graphics, or pursue additional graduate studies.
+            Our vast network of alumni have gone on to work for many local and internationally-recognized companies, including Bayer, Boeing, Express Scripts, Google, MasterCard, Microsoft, USPS, World Wide Technologies and more.</p>
+        <p>We are going to help you and make your degree program planning easy for you. We are going to provide you with a sample BS in CS degree program planner map.</p>
+        <h2>Degree Requirements</h2>
+        <p>Candidates need to know all the degree requirements before they start with the enrollment.</p>
+        <p><a href="https://bulletin.umsl.edu/programs/computer-science-bs/#requirementstext" style="color: #4fa9f8;" target="_blank"><i>Click here</i></a> to know more about the degree requirements in Computer Science.</p>
+        <h2>Course rotation(List of all computer science courses that are offered.).</h2>
+        <p>The course rotation is available as an Excel file, which is sortable by degree or certificate to group courses specific to this program, and as a pdf file.
+            <ul>Sortable version is <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fwww.umsl.edu%2Fcmpsci%2Fundergraduate-studies%2Fundergradrotationpublished.xlsx&wdOrigin=BROWSELINK" style="color: #4fa9f8;" target="_blank"><i>here</i></a></ul>
+            <ul>Unsortable PDF version is <a href="https://www.umsl.edu/cmpsci/undergraduate-studies/undergradrotationpublished.pdf" style="color: #4fa9f8;" target="_blank"><i>here</i></a></ul>
+        </p>
+        <h2>About the Map</h2>
+        <p>
+            The map shows you a sample plan of how your semesters can be structured. You can use that for reference or create your own map by making changes in the provided map.
+        </p>
+        <h2> Instructions regarding the next page(Student Information for map generation.)</h2>
+        <p>The next page which collects the information from the student that is considered to generate a sample map.
+            <ul>
+                <li><u>Waived courses</u>: Indicates the list of courses that are waived for the student. It shows a dropdown menu and allows the student to select the courses from the dropdown list and the selected courses will be added to the waived courses
+                    list one after the other. The dropdown list includes core courses(*mandatory courses), prereqs(*courses that need to be completed before taking a particular course), core electives, gen-ed and free electives. These courses are not required for the student to take(i.e allowed only if the student has enough proficiency in
+                    that particular course) and the map which is generated will not contain these courses only if waiving these courses will not violate any degree requirements. There is also a delete option available for the student if they want to remove any courses from the list that they have added to.</li>
+                <li><u>Completed courses</u>: Indicates the list of courses that are completed by the student. It shows a dropdown menu and allows the student to select the courses from the dropdown list and the selected courses will be added to the completed
+                    courses list one after the other. These courses are already completed by the student in the previous semesters(with acceptable grades) and the student don't need to take these courses in the upcoming semesters. The map which is generated
+                    will not contain these courses. There is also a delete option available for the student if they want to remove any courses from the list that they have added to.</li>
+                <li><u>Current credits</u>:  This field displays the total number of current credits for all the completed courses which dynamically increase/decrease depending on the courses in the Completed courses field.</li>
+                <li><u>Semesters</u>: This field allows the student to select the preferred number of semesters in which the student wants to complete his degree program. This is a dropdown menu with numbers ranging from 1 to 30. If it is not selected, then
+                    the map will automatically be generated with the default necessary number of semesters.</li>
+                <li><u>Summer</u>: This field allows the student to set the attribute to "yes" or "no" which represents if the student wants to take courses in the summer semester too. This by default will be set to 'No'. If the student selects 'Yes' then
+                    a dropdown appears which lets the student select how many credit hours does the student wants to enroll in summer.</li>
+                <li><u>Summer credits</u>: This field lets the student to enter how many credit hours does the student want to enroll in the summer semester. This is also a dropdown menu with numbers ranging from 1 to 30.</li>
+                <li><u>Starting Season</u>: Represents in which smester the student wants to start the degree program.</li>
+                <li><u>Credits_persem</u>: Represents the number of credits the student wants to enroll in per semester.This is a dropdown menu which allows the student to select from 1 to 30.</li>
+            </ul>
+        </p>
+        <form action="/user_info">
+            <div class="button-container">
+                <button type="submit" class="button">Continue..</button>
+                <!-- click Continue.. button to redirect to the next page -->
+            </div>
+        </form>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<head>
+
+  <title>List Generator</title>
+</head>
+<body>
+
+  <button onclick="createIdenticalDropdown()">Make Select Button</button>
+
+  <div id="container"></div>
+
+  <script>
+    function createIdenticalDropdown() {
+      // Create a new select element (drop-down list)
+      var newDropdown = document.createElement("select");
+
+      // Add options to the new drop-down list
+      var course_name_jav={{ course_names | tojson }};
+      for (let i = 0; i < course_name_jav.length; i++){
+        var option = document.createElement("option");
+        option.text=course_name_jav[i];
+        newDropdown.add(option);
+      }
+
+      var newCheckmark = document.createElement("INPUT");
+      newCheckmark.setAttribute("type","checkbox");
+
+      var newButton = document.createElement("button");
+      newButton.textContent = "-";
+      // Add the new drop-down list to the container
+      document.getElementById("container").appendChild(newDropdown);
+      // Add new checkbox to the container.
+      document.getElementById("container").appendChild(newCheckmark);
+      // Add new Button to the container.
+      document.getElementById("container").appendChild(newButton);
+      // Add Space, got to next line
+      document.getElementById("container").appendChild(document.createElement("br"));
+      document.append("\n");
+    }
+  </script>
+
+</body>
+</html>

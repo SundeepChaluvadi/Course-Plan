@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>B.S. in Computer Science | UMSL</title>
+    <script>
+        function updateWaivedCourse() {
+            var selectedOption = document.getElementById("dropdown").value;
+            document.getElementById("Waived_course").value = selectedOption;
+        }
+        
+        function updateCompletedCourse() {
+            var selectedOption = document.getElementById("dropdown").value;
+            document.getElementById("Completed_course").value = selectedOption;
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <img src="{{ url_for('static', filename='umsl.jpg') }}">
+    <h1>Student Information:</h1>
+    <form action="/course_map" method="POST">
+        <pre><p>Student Name      <input type="text" name="Student_name"></p></pre>
+        <pre><p>Waived Course     <input type="text" id="Waived_course" name="Waived_course"></p></pre>
+        <select id="dropdown" name="course" onchange="updateTextField()">
+            {% for item in items %}
+                <option value="{{ item }}">{{ item }}</option>
+            {% endfor %}
+        </select>
+        <pre><p>Completed Course  <input type="text" id="Completed_course" name="Completed_course"></p></pre>
+        <select id="dropdown" name="course" onchange="updateTextField()">
+            {% for item in items %}
+                <option value="{{ item }}">{{ item }}</option>
+            {% endfor %}
+        </select>
+        <pre><p>Semesters         <input type="text" name="Semesters"></p></pre>
+        <pre><p>Summers           <input type="text" name="Summers"></p></pre>
+        <pre><p>Starting_season   <input type="text" name="Starting_season"></p></pre>
+        <pre><p>credits_persem    <input type="text" name="credits_persem"></p></pre>
+        <p><input type="submit" value="Submit"></p>
+    </form>
+</body>
+</html>

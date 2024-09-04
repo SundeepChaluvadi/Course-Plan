@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>B.S. in Computer Science | UMSL</title>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='umsl.jpg') }}">
+    <h1 style="color: firebrick; font-family: Compacta typeface, sans-serif;">STUDENT INFORMATION</h1>
+    <form action="/data/" method="POST">
+        <pre><p>STUDENT NAME      <input type="text" name="Student_name"></p></pre>
+        <pre><p>WAIVED COURSE     <input type="text" id="Waived_course" name="Waived_course"></p></pre>
+        <select id="waived_dropdown">
+            {% for credit in credit_list %}
+                <option value="{{ credit.class_deptnumber }}" data-credits="{{ credit.credits }}">
+                    Subject: {{credit.class_deptnumber }} | Credits: {{credit.credits }} | {{credit.course_type}}
+                </option>
+            {% endfor %}            
+        </select>
+        <div id="waived_course_container">
+            <!-- <button type="button" onclick="addCourse('waived_course_container', 'waived_dropdown', 'Waived_course')">ADD COURSE TO WAIVED LIST</button> -->
+            <button type="button" onclick="addCourseToWaived('waived_course_container', 'waived_dropdown', 'Waived_course')">ADD COURSE TO WAIVED LIST</button>
+            <button type="button" onclick="deleteLastWaivedCourse()">DELETE</button>
+        </div>
+        <pre><p>COMPLETED COURSE  <input type="text" id="Completed_course" name="Completed_course"></p></pre>
+        <select id="completed_dropdown">
+            {% for credit in credit_list %}
+                <option value="{{ credit.class_deptnumber }}" data-credits="{{ credit.credits }}">
+                    Subject: {{credit.class_deptnumber }} | Credits: {{credit.credits }} | {{credit.course_type}}
+                </option>
+            {% endfor %}
+        </select>
+        <div id="completed_course_container">
+            <button type="button" onclick="addCourse('completed_course_container', 'completed_dropdown', 'Completed_course')">ADD COURSE TO COMPLETED LIST</button>
+            <button type="button" onclick="deleteLastCourse()">DELETE</button>
+        </div>
+        <pre><p>CURRENT CREDITS   <input type="text" id="current_credits" name="current_credits" readonly></p></pre>
+        <!-- <pre><p>SEMESTERS         <input type="text" name="semesters"></p></pre> -->
+        <pre><p>SEMESTERS         <select name="semesters">
+            {% for i in range(1, 31) %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select></p></pre>        
+        <div class="radio-container">
+            <label style="margin-right: 64px; font-size: small;">SUMMER</label>
+            <input type="radio" name="Summer" id="summer_yes" value="Yes" onclick="showSummerField()"> <label for="summer_yes">YES</label>
+            <input type="radio" name="Summer" id="summer_no" value="No" onclick="hideSummerField()" checked> <label for="summer_no">NO</label>
+        </div>
+        <div id="summer_credits_field" style="display: none;">
+            <p style="display: inline-block; margin: 0; font-size: small;">SUMMER CREDITS</p>
+            <select name="summer_credits" style="display: inline-block; margin-left: .80em;">
+                {% for i in range(0, 31) %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+        </div>       
+        <pre><p>STARTING SEASON   <select id="starting_season_dropdown" name="Starting_season">
+            {% for season in starting_season %}
+                <option value="{{ season }}">{{ season }}</option>
+            {% endfor %}
+        </select></p></pre>
+        <pre><p>CREDITS_PERSEM    <select name="credits_persem">
+            {% for i in range(1, 31) %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select></p></pre>
+        <p><input type="submit" value="Submit"></p>
+    </form>
+
+    <script>
+    function addCourse(containerId, dropdownId, courseName) {
+        console.log("addCourse() function called.");
+        var container = document.getElementById(containerId);
+        var dropdown = document.getElementById(dropdownId);
+        var selectedOption = dropdown.options[dropdown.selectedIndex];
+
+        var optionsToDisable = ['CORE', 'ENGLISH', 'MATH', 'ELECTIVE', 'OTHER'];
+        optionsToDisable.forEach(option => {
+            var optionElement = dropdown.querySelector('option[value="' + option + '"]');
+            if (optionElement) {
+                optionElement.disabled = true;
+            }
+        });
+
+        if (optionsToDisable.includes(selectedOption.value)) {
+            optionsToDisable.forEach(option => {
+                var optionElement = dropdown.querySelector('option[value="' + option + '"]');
+                if (optionElement) {
+                    optionElement.disabled = false;
+                }
+            });
+            return; 
+        }
+
+        var input = document.getElementById(courseName);
+        if (!input) {
+            input = document.createElement("input");
+            input.type = "text";
+            input.id = courseName;
+            input.name = courseName;
+            container.appendChild(input); 
+        }
+
+        var courses = input.value.split(", ");
+        if (courses.includes(selectedOption.value)) {
+            alert("You have already selected the course.");
+            return;
+        }
+
+        if (!input.value) {
+            input.value = selectedOption.value;
+        } else {
+            input.value += ", " + selectedOption.value;
+        }
+
+        var totalCredits = calculateTotalCredits(input.value, dropdown);
+
+        document.getElementById("current_credits").value = totalCredits;
+
+        input.size = Math.max(input.value.length, 20);
+
+        optionsToDisable.forEach(option => {
+            var optionElement = dropdown.querySelector('option[value="' + option + '"]');
+            if (optionElement) {
+                optionElement.disabled = false;
+            }
+        });
+    }
+
+    function addCourseToWaived(containerId, dropdownId, courseName) {
+        console.log("addCourseToWaived() function called.");
+        var container = document.getElementById(containerId);
+        var dropdown = document.getElementById(dropdownId);
+        var selectedOption = dropdown.options[dropdown.selectedIndex];
+
+        var optionsToDisable = ['CORE', 'ENGLISH', 'MATH', 'ELECTIVE', 'OTHER'];
+        optionsToDisable.forEach(option => {
+            var optionElement = dropdown.querySelector('option[value="' + option + '"]');
+            if (optionElement) {
+                optionElement.disabled = true;
+            }
+        });
+
+        if (optionsToDisable.includes(selectedOption.value)) {
+            optionsToDisable.forEach(option => {
+                var optionElement = dropdown.querySelector('option[value="' + option + '"]');
+                if (optionElement) {
+                    optionElement.disabled = false;
+                }
+            });
+            return; 
+        }
+
+        var input = document.getElementById(courseName);
+        if (!input) {
+            input = document.createElement("input");
+            input.type = "text";
+            input.id = courseName;
+            input.name = courseName;
+            container.appendChild(input); 
+        }
+
+        var courses = input.value.split(", ");
+        if (courses.includes(selectedOption.value)) {
+            alert("You have already selected the course.");
+            return;
+        }
+
+        if (!input.value) {
+            input.value = selectedOption.value;
+        } else {
+            input.value += ", " + selectedOption.value;
+        }
+
+        input.size = Math.max(input.value.length, 20);
+
+        optionsToDisable.forEach(option => {
+            var optionElement = dropdown.querySelector('option[value="' + option + '"]');
+            if (optionElement) {
+                optionElement.disabled = false;
+            }
+        });
+    }
+
+    function calculateTotalCredits(completedCourses, dropdown) {
+        var totalCredits = 0;
+        var courses = completedCourses.split(", ");
+        courses.forEach(course => {
+            totalCredits += parseInt(dropdown.querySelector('option[value="' + course + '"]').getAttribute('data-credits'));
+        });
+        return totalCredits;
+    }
+
+    function deleteLastCourse() {
+        var input = document.getElementById("Completed_course");
+        var completedCourses = input.value.split(", ");
+        
+        completedCourses.pop();
+
+        input.value = completedCourses.join(", ");
+
+        var totalCredits = 0;
+        if (completedCourses.length > 0 && completedCourses[0] !== "") {
+            totalCredits = calculateTotalCredits(completedCourses.join(", "), document.getElementById("completed_dropdown"));
+        }
+
+        document.getElementById("current_credits").value = totalCredits;
+    }
+
+    function deleteLastWaivedCourse() {
+        var input = document.getElementById("Waived_course");
+        var waivedCourses = input.value.split(", ");
+        
+        waivedCourses.pop();
+
+        input.value = waivedCourses.join(", ");
+    }
+
+    function showSummerField() {
+        var summerField = document.getElementById('summer_credits_field');
+        summerField.style.display = 'block';
+    }
+
+    function hideSummerField() {
+        var summerField = document.getElementById('summer_credits_field');
+        summerField.style.display = 'none';
+    }
+    </script>
+</body>
+</html>

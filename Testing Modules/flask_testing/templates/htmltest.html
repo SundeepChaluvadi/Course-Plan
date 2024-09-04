@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dropdown</title>
+</head>
+<body>
+<p id="demo">
+<select name= course method="GET" action="/">
+    {% for course in course_names %}
+    <option value= "{{course}}" SELECTED>{{course}}</option>"
+    {% endfor %}
+</select>
+<input type="checkbox" id="online" name="vehicle1" value="Bike">
+
+<button onclick="myFunction()">Yes</button>
+</p>
+<button onclick="myFunction()">Submit</button>
+
+<script>
+    function myFunction(){
+        document.getElementById("demo").innerHTML="Testing";
+    }
+    function CreateNewDom() {
+        var DOMHeadingOne = document.createElement("button").type("submit").onclick(CreateNewDom());
+        document.getElementById("editor").appendChild(DOMHeadingOne);
+    }
+</script>
+
+
+    <button type="submit" name="e-h1" onclick="CreateNewDom();">H1 Überschrift</button>
+    <form id="editor" method="post">
+    </form>
+</body>
+</html>

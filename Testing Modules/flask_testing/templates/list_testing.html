@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <title>Calendar</title>
+      </head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two Column List with Rounded Boxes and Headers</title>
+<style>
+  /* CSS for two-column layout */
+  .list-container {
+    width: calc(30% - 20px); /* Adjust this value to control the width of each column */
+    width: 400px;
+    float: left;
+    box-sizing: border-box;
+    padding: 10px;
+    margin: 10px;
+  }
+  
+  .rounded-box {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+  }
+  
+  /* Clearfix to contain floats */
+  .clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+</style>
+</head>
+<body>
+
+<div class="clearfix">
+{% for semester in calendar %}
+  <!-- First column -->
+  <div class="list-container">
+    <div class="rounded-box">
+      <h2>{{ calendar[semester]['name']+", "+calendar[semester]['season'] }}
+        {{ (calendar[semester]['year']) }}</h2>
+      <h3>Total Hours: {{ calendar[semester]['hours'] }}</h3>
+      <ul style="width:30%; float:left;">
+        <h4>Courses</h4>
+        {% for item in calendar[semester]['courses'] %}
+        <li>{{ calendar[semester]['courses'][item]['course_name'] }}</li>
+        {% endfor %}
+      </ul>
+      <ul style="width:30%; float:left; list-style-type:none;">
+        <h4>Credits</h4>
+        {% for item in calendar[semester]['courses'] %}
+        <li>{{ calendar[semester]['courses'][item]['credits'] }}
+        </li>
+        {% endfor %}
+      </ul>
+
+    </div>
+  </div>
+
+
+  <!-- Second column 
+  <div class="list-container">
+    <div class="rounded-box">
+      <h2>List 2</h2>
+      <ul>
+        <li>Item 4</li>
+        <li>Item 5</li>
+        <li>Item 6</li>
+      </ul>
+    </div>
+  </div>
+</div>
+-->
+{% endfor %}
+</body>
+</html>

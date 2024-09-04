@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <title>Calendar for {{ html_data }}</title>
+      </head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two Column List with Rounded Boxes and Headers</title>
+<style>
+  /* CSS for two-column layout */
+  .list-container {
+    width: calc(30% - 20px); /* Adjust this value to control the width of each column */
+    width: 1000px;
+    float: left;
+    box-sizing: border-box;
+    padding: 10px;
+    margin: 10px;
+  }
+  
+  .rounded-box {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+  }
+  
+  /* Clearfix to contain floats */
+  .clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+</style>
+</head>
+<body>
+
+<div class="clearfix">
+  <h1>Hello {{ student_name }}!</h1>
+  <h2>Variables:</h2>
+  <li>Student Name: {{ student_name }}</li>
+  <li>Waived courses: {{ waived_courses }}</li>
+  <li>Completed Courses: {{ completed_courses }}</li>
+  <li>Semesters: {{ semesters }}</li>
+  <li>Summer? {{ summer }}</li>
+  <li>Starting Season: {{ starting_season }}</li>
+  <li>Availability codes:</li>
+  <li>"D"=Daytime,"E"=Evening,"O"=Online,"A"=Internship,"-"=Other,"H"=Half-Online</li>
+
+
+{% for semester in calendar %}
+  <!-- First column -->
+  <div class="list-container">
+    <div class="rounded-box">
+      <h2>{{ calendar[semester]['name']+", "+calendar[semester]['season'] }}
+        {{ (calendar[semester]['year']) }}</h2>
+      <h3>Total Hours: {{ calendar[semester]['hours'] }}</h3>
+      <ul style=" float:left; list-style-type:none;">
+        <h4>Courses</h4>
+        {% for item in calendar[semester]['courses'] %}
+        <li>{{ calendar[semester]['courses'][item]['course_name'] }}</li>
+        {% endfor %}
+        <div id={{semester}}></div>
+        
+        <button onclick="createDropdown({{hours}},'{{semester}}')">Add Course</button>
+      </ul>
+      <ul style=" float:left; list-style-type:none;">
+        <h4>Credits</h4>
+        {% for item in calendar[semester]['courses'] %}
+        <li>{{ calendar[semester]['courses'][item]['credits'] }}
+        </li>
+        {% endfor %}
+      </ul>
+      <ul style=" float:left; list-style-type:none;">
+        <h4>Availability</h4>
+        {% for item in calendar[semester]['courses'] %}
+        <li>{{ calendar[semester]['courses'][item]['season_available'][calendar[semester]['season']] }}
+        </li>
+        {% endfor %}
+      </ul>
+      <ul style=" float:left; list-style-type:none; ">
+        <h4>Move/Remove?</h4>
+        {% for item in calendar[semester]['courses'] %}
+        <li>
+            <select id="dropdown" name="Move">
+            <option value="-">-</option>
+            <option value="Remove Course">Remove Course</option>
+            {% for semester in calendar %}
+                <option value="{{ calendar[semester]['name'] }}">Move to {{ calendar[semester]['name'] }}</option>
+            {% endfor %}
+        </select>
+        </li>
+        {% endfor %}
+      </ul>
+
+
+
+    </div>
+  </div>
+
+{% endfor %}
+
+<div id="container"><p></p></div>
+
+<script>
+    var dropdownCount = 0;
+
+    function createDropdown(hours,argu) {
+      // Increment dropdown count for unique ids
+      dropdownCount++;
+
+      // Create a container div for the dropdown and delete button
+      var container = document.createElement("div");
+
+      // Create a select element (dropdown)
+      var dropdown = document.createElement("select");
+      dropdown.id = "dropdown_" + dropdownCount;
+      // Create options for the dropdown
+      var options = hours;
+
+      // Loop through options and create option elements
+      options.forEach(function(optionText) {
+        var option = document.createElement("option");
+        option.text = optionText;
+        dropdown.add(option);
+      });
+
+      // Create a delete button
+      var deleteButton = document.createElement("button");
+      deleteButton.textContent = "-";
+      deleteButton.onclick = function() {
+        container.parentNode.removeChild(container);
+      };
+
+      // Append the dropdown and delete button to the container
+      container.appendChild(dropdown);
+      container.appendChild(deleteButton);
+
+      // Get the container div where dropdowns will be added
+      var dropdownContainer = document.getElementById(argu);
+
+      // Append the container to the dropdown container div
+      dropdownContainer.appendChild(container);
+
+      // Add a line break
+      //dropdownContainer.appendChild(document.createElement("br"));
+    }
+  </script>
+</body>
+</html>

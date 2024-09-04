@@ -1,0 +1,76 @@
+<all>
+    <!--Course with most attributes.-->
+    <course>
+        <subject>CS</subject>
+        <course_number>2200</course_number>
+        <course_name>CS2200</course_name>
+        <credit>3</credit>
+        <course_description>NA</course_description>
+        <can_select_multiple></can_select_multiple>
+        <prerequisite>
+                <and_required>CS1100</and_required>
+                <and_required>CS1000</and_required>
+        </prerequisite>
+        <corequisite>
+                <and_required>CS2100</and_required>
+                <and_required>CS2000</and_required>
+        </corequisite>
+        <core>
+            <core_subject>CS</core_subject>
+        </core>
+        <term>
+            <semester>FA</semester>
+            <semester>SU</semester>
+            <semester>SP</semester>
+        </term>
+        <paired>CS2210</paired>
+    </course>
+
+    <!--Course without prereqs or coreqs-->
+    <course>
+        <subject>CS</subject>
+        <course_number>2210</course_number>
+        <course_name>CS2210</course_name>
+        <credit>3</credit>
+        <course_description>NA</course_description>
+        <can_select_multiple></can_select_multiple>
+        <prerequisite>
+        </prerequisite>
+        <corequisite>
+        </corequisite>
+        <core>
+            <core_subject>CS</core_subject>
+        </core>
+        <term>
+            <semester>FA</semester>
+            <semester>SU</semester>
+            <semester>SP</semester>
+        </term>
+        <paired>CS2200</paired>
+    </course>
+    
+    <!--Course with one term.-->
+    <course>
+        <subject>CS</subject>
+        <course_number>2230</course_number>
+        <course_name>CS2230</course_name>
+        <credit>3</credit>
+        <course_description>NA</course_description>
+        <can_select_multiple></can_select_multiple>
+        <prerequisite>
+                <and_required>CS1100</and_required>
+                <and_required>CS1000</and_required>
+        </prerequisite>
+        <corequisite>
+                <and_required>CS2100</and_required>
+                <and_required>CS2000</and_required>
+        </corequisite>
+        <core>
+            <core_subject>CS</core_subject>
+        </core>
+        <term>
+            <semester>FA</semester>
+        </term>
+        <paired>CS2230</paired>
+    </course>
+</all>

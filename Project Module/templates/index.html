@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dropdown Values to Flask</title>
+</head>
+<body>
+    {% for items in crag %}
+    <select id="{{items}}">
+        {% for item in dip %}
+        <option value="{{item}}">{{item}}</option>
+        {%endfor%}
+    </select>
+    {%endfor%}
+    <button onclick="sendValues()">Send Values</button>
+
+    <script>
+        function sendValues() {
+            var dropdowns = document.getElementsByTagName("select");
+            var data = {};
+
+            // Iterate through each select element
+            for (var i = 0; i < dropdowns.length; i++) {
+                var dropdown = dropdowns[i];
+                // Get the id and selected value of each dropdown
+                var id = dropdown.id;
+                var value = dropdown.value;
+                // Assign the value to the corresponding id key in the data object
+                data[id] = value;
+            }
+
+            // Send data to Flask backend via POST request
+            fetch('/process_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                // Handle response
+                console.log(response);
+                // You can redirect to another page or do something else here
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

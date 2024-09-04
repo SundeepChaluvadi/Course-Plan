@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dropdown</title>
+</head>
+<body>
+<select name= course method="GET" action="/">
+    {% for course in course_names %}
+    <option value= "{{course}}" SELECTED>{{course}}</option>"
+    {% endfor %}
+</select>
+<input type="checkbox" id="online" name="vehicle1" value="Bike">
+
+</body>
+</html>
